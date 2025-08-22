@@ -1,0 +1,32 @@
+{
+  "name": "project_b",
+  "version": "1.0.0",
+  "description": "the backend project with git cicd pipeline.",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon -r dotenv/config --experimental-json-modules src/server.js"
+
+    
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:Mangeshlawande/Only_backend.git"
+  },
+  "keywords": [
+    "mongodb",
+    "express",
+    "middlewares"
+  ],
+  "author": "Man@123",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.10",
+    "prettier": "^3.6.2"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "mongoose": "^8.17.2"
+  }
+}
