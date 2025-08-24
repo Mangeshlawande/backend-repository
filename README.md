@@ -95,3 +95,35 @@ extended means we can pass object inside object
 
     - learn nodejs apiError
     : can override the methods to control the errors  
+
+
+### User and video model with hooks and JWT
+    ** user & videos ** 
+   - mongodb generate _id and stored in BSON 
+
+    in user.model for user.name, 
+    index :true expensive operation , but make searching efficient in optimize way, if we used it searching 
+
+    - mongoose-aggregate-paginate-v2 
+    - jsonwebtoken : based on cryptography.
+    - bcrypt library ::--> built on core nodejs package
+    - bcryptjs ::--> it's optimize js with 0 dependency & compitable with bcrypt. 
+         - helps you to hash your password 
+
+    - write aggregation queries
+    mongoose-aggregate-paginate-v2 is a Mongoose plugin designed to facilitate pagination of results obtained from MongoDB aggregation pipelines. It extends the functionality of Mongoose models, allowing developers to easily add pagination capabilities to their aggregation queries.
+
+    mongoose pre() hooks  : just data before save we can run this hook, with help of this we can inject/ execute  additional code.
+    - use in userSchema we can run on save , validate, remove updateOne, deleteOne etc.,
+
+## arrow fn dont know about context , (reference to this )
+
+ *Json Web Token*  :
+
+     It's a bearer token, like a key 
+     whoever send this token , server send data to this user 
+    token have 1. header (), 2. data , 3. signature 
+   -  we can use both session and cookies
+
+   - we cannot store access token in db , we store refresh token in db
+   - 
