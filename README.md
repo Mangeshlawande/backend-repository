@@ -127,3 +127,29 @@ extended means we can pass object inside object
 
    - we cannot store access token in db , we store refresh token in db
    - 
+
+
+## How to upload file in backend | Multer
+ - File handleing use third party service .
+ - make utility , middleware 
+ - services used 
+    1. cloudinary sdk [third party service]
+    2. multer : get file from user and upload on server
+    3. express File upload 
+
+#### we upload file through multer
+    - 2 steps 1. get file store in temp folder [make chance to reupload]
+              2. from temp folder upload on cloudinary.
+              or apply multer middleware.
+
+cloudinary utility or make in serve folder 
+
+- fs : it's a file system inside node 
+    - helps to read, write, remove etc., 
+    file path : link, 
+    unlink: we delete the file , it only unlink the file , it is remain there. operating system
+
+ Get documented code & used for custom Methods, write your own logic;
+
+ **write middleware using multer** 
+    - for file uploading we need multer
