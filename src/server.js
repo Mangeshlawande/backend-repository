@@ -10,24 +10,18 @@ dotenv.config({
     path: "./env"
 });
 
-
 // return a promise 
 connectDB()
     .then(()=>{
-
         app.on("error", ()=>{
-            console.log(`Error :  ${error}`);
-        })
-
+            console.log(`❌ Express server error::  ${error}`);
+        });
         app.listen(process.env.PORT || 8001, ()=>{
-            console.log(`Server is running at port : ${process.env.PORT}`);
-            
-        })
+            console.log(`Server running in ${process.env.NODE_ENV || 'development!!'} mode on port ${process.env.PORT}`);
 
-    })
-    .catch((error) => {
-        console.log("MongoDB connection failed !!!!  ", error);
-
+        });
+    }).catch((error) => {
+        console.log("MongoDB connection failed !!!  ", error);
     })
 
 

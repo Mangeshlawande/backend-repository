@@ -13,6 +13,7 @@ import { DB_NAME } from "../constants.js";
   current app run on existing process &where the process refer to 
 
  */
+mongoose.set('debug', true); 
 
 const connectDB = async () => {
     try {
