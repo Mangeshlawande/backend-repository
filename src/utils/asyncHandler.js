@@ -2,6 +2,11 @@
 //  higher order function : accept fun as parameter, return fun
 // using promises
 
+
+/**
+ *  asyncHandler used for handling web request 
+ * 
+ */
 const asyncHandler = (requestHandler) => {
     return (req, res, next) => {
         Promise.resolve(requestHandler(req, res, next)).catch((err) => next(err))
