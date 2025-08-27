@@ -1224,7 +1224,7 @@ concept of both tokens -- > client have both tokens,
 after user login have to give some routes
 verify login from auth middleware
 
-# Access Token, Refresh Token, Middleware, and Cookies Implementation Guide
+
 
 ## Authentication Flow Overview
 
@@ -1600,3 +1600,22 @@ REFRESH_TOKEN_EXPIRY=10d
 4. **Token Generation**: Should be implemented as instance methods on the User model for better organization
 
 5. **Error Handling**: Proper error handling was missing in the original description
+
+---
+
+# Access token and refresh token in Backend
+
+access token is expired : 
+ - user want access some resource, but user get 401 request , behalf of login again , frontend dev inject some extra code which hit endpoint request to refresh token by sending refreshtoken,
+ if refreshtoken from user side and db is valid and same, then restart session
+
+
+refreshToken known as session storage also store in db,
+
+**Logic**
+- make  endpoint for user to refresh their token 
+- user receives encrypted token 
+- we want raw token,to  verify it use jwtverify
+
+- write controller 
+- make endpoints in user.routes
