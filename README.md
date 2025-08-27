@@ -1112,3 +1112,39 @@ The complete URL will be: `http://localhost:8000/api/v1/users/register`
 5. **Missing package.json setup**: Added instructions for installing dependencies
 
 This complete setup provides a robust foundation for building Express applications with proper routing, controllers, and debugging capabilities.
+
+
+
+## Logic building | Register controller
+
+logic Building  Register controller
+
+  - get user details from frontend 
+  - validation - not empty
+  - check if user already exists: username, email
+  - check for coverImage, check for avatar(required) in model
+  - upload them to cloudinary -->  check img upload in cloudinary
+  - create user object -- create entry in db (return all data in response)
+  - remove password and refresh token field from response 
+  - check for user creation.
+  - return response.
+
+{destructure  data  }=req.body
+req.url
+
+for files 
+  in user.routes.js upload middleware 
+  router.rooute('/register').post(
+    upload.fields([
+      {name:'avatar',
+      maxCount:1},
+      { name:'coverImage',
+      maxCount: 1}
+    ])
+  );
+
+  User model can directly interact with db
+  -  multer middleware gives access to files  : req.files, have multiple properties 
+  - req.files.filename-gives-in-multer-middleware[0]?.path
+  filename[0] gives 1st property 
+  - ? for optional  check

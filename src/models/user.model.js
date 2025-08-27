@@ -60,7 +60,7 @@ userSchema.pre("save", async function (next) {
     // pass next flag further
     if (!this.isModified("password")) return next();
 
-    this.password = bcrypt.hash(this.password, 10)
+    this.password = await bcrypt.hash(this.password, 10)
     next()
 });
 
@@ -86,7 +86,6 @@ userSchema.methods.generateaRefreshToken = function () {
     return jwt.sign(
         {
             _id : this._id,
-            
         },
         process.env.REFRESH_TOKEN_SECRET,
         {
