@@ -11,10 +11,11 @@ const registerUser = asyncHandler(async (req, res) => {
     const { username, email, fullname, password, } = req.body;
 
     if (
-        [username, email, fullname, password].some((field) => field?.trim() === "")
+      [username, email, fullname, password].some((field) => 
+        typeof field !== 'string'|| field?.trim() === "")
     ) {
-        throw new ApiError(400, "All fields required !! ");
-    };
+      throw new ApiError(400, "All fields are required and must be non-empty strings");
+    }
 
     //email formatting check @ is there or not 
     if (!(email.includes("@"))) {
@@ -22,7 +23,7 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Error : @ is missing in email field !!");
     }
 
-    const existedUser = User.findOne({
+    const existedUser = await User.findOne({
         $or: [{ email }, { username }]
     });
 
@@ -43,7 +44,7 @@ const registerUser = asyncHandler(async (req, res) => {
     }
 
 
-    const avatar = await uploadOnCloudinary(avatarLocalPath);
+    const avatar = await uploadOnCloudinary(avatarLocalPath );
     const coverImage = await uploadOnCloudinary(coverImageLocalPath);
 
     if (!avatar) {

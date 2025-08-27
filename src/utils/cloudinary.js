@@ -5,9 +5,9 @@
  
  */
 
- 
+
 // custom naming
- import { v2 as cloudinary } from "cloudinary";
+import { v2 as cloudinary } from "cloudinary";
 import fs from 'fs';
 
 
@@ -17,18 +17,24 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-const uploadOnCloudinary = async (localFilePath) =>{
+const uploadOnCloudinary = async (localFilePath) => {
     try {
-        if(!localFilePath) {
+        if (!localFilePath) {
             console.error("Error : Localfile Path not exist !!");
         }
         // file upload on cloudinary
-       const response = await cloudinary.uploader.upload(localFilePath, {
-            resource_type:"auto"
+        const response = await cloudinary.uploader.upload(localFilePath, {
+            resource_type: "auto",
+            folder: `Backend/usersFiles`, // Use 'asset_folder' in dynamic mode
+            use_filename: true, // Optional: Use the original filename
         });
         //file has been successfully uploaded successfully.
         console.log("File is uploaded on cloudinary !! ");
         console.log("Path : ", response.url);
+
+        // Remove the locally saved temporary file
+        fs.unlinkSync(localFilePath);
+        
         return response;
 
     } catch (error) {

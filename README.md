@@ -1148,3 +1148,11 @@ for files
   - req.files.filename-gives-in-multer-middleware[0]?.path
   filename[0] gives 1st property 
   - ? for optional  check
+
+## How to use postman for backend
+
+- have to share Postman collection.
+- In req.body need form data, raw json --dont option to send files 
+  - content-type
+  - value
+  - Description
