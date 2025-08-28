@@ -1603,19 +1603,74 @@ REFRESH_TOKEN_EXPIRY=10d
 
 ---
 
-# Access token and refresh token in Backend
+  # Access token and refresh token in Backend
 
-access token is expired : 
- - user want access some resource, but user get 401 request , behalf of login again , frontend dev inject some extra code which hit endpoint request to refresh token by sending refreshtoken,
- if refreshtoken from user side and db is valid and same, then restart session
+## **Token System Overview**
+- Modern web authentication uses two tokens: **access token** and **refresh token**
+- Both tokens work together to balance **security** and **user experience**
+
+## **Access Token Characteristics**
+- Short-lived token (typically 15 minutes to 1 hour)
+- Grants immediate access to protected resources
+- Short expiration limits vulnerability window if compromised
+- Server rejects expired tokens with **401 Unauthorized** error
+
+## **Refresh Token Characteristics**
+- Longer-lived token (typically days or weeks)
+- Acts as persistent session identifier
+- Stored securely in database
+- Used to obtain new access tokens without reauthentication
+
+## **Token Expiration Flow**
+1. User attempts to access protected resource with expired access token
+2. Server responds with **401 Unauthorized** status
+3. Frontend automatically detects token expiration
+4. Frontend sends refresh token to dedicated refresh endpoint
+5. Server verifies refresh token against database storage
+6. If valid: server issues new access token (and often new refresh token)
+7. If invalid: user must complete full login again
+8. User session continues seamlessly without manual intervention
+
+## **Security Implementation**
+- Refresh tokens stored securely in database
+- Token rotation: issuing new refresh tokens with each access token refresh
+- JWT verification used to validate token authenticity
+- Dedicated refresh endpoint in API routes
+- Controller handles token validation and reissuance
+
+## **Benefits**
+- Enhanced security through short-lived access tokens
+- Improved user experience by minimizing login interruptions
+- Reduced password exposure through limited authentication requests
+- Controlled session management through database-persisted refresh tokens
+
+This token-based authentication system provides a robust security framework while maintaining a seamless user experience across browsing sessions.
+
+---
+  access token is expired : 
+  - user want access some resource, but user get 401 request , behalf of login again , frontend dev inject some extra code which hit endpoint request to refresh token by sending refreshtoken,
+  if refreshtoken from user side and db is valid and same, then restart session
 
 
-refreshToken known as session storage also store in db,
+  refreshToken known as session storage also store in db,
 
-**Logic**
-- make  endpoint for user to refresh their token 
-- user receives encrypted token 
-- we want raw token,to  verify it use jwtverify
+  **Logic**
+  - make  endpoint for user to refresh their token 
+  - user receives encrypted token 
+  - we want raw token,to  verify it use jwtverify
 
-- write controller 
-- make endpoints in user.routes
+  - write controller 
+  - make endpoints in user.routes
+
+  # hashnode 
+  make an article refresh-token vs access-token
+
+  ## Writing update controllers for user | Backend with JS
+
+subscription Model
+   - subscriber === user
+   - channel === user
+  
+   - subscriber :  want to add multiple object
+   
+
