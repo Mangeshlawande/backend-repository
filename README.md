@@ -1672,5 +1672,31 @@ subscription Model
    - channel === user
   
    - subscriber :  want to add multiple object
-   
+
+
+
+
+***Write separate controller for update files.  (better approach)***
+- user want to update img only, gives img to update, save hit endpoint
+- if we save whole user again then other fields override again 
+- helps to reduce congestion 
+
+ **controllers**
+ - update user info
+   - jwt to get user from routes
+
+ - update files
+  - In routes middlewares 
+     1. auth
+     2. multer
+  - controllers
+
+## write logic for  watch history 
+watch history get ids of videos 
+
+***how get data from other model ?***
+
+In Subscription Model :
+- from user profile 
+- send subscriber counts
 
