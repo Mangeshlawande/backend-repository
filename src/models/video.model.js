@@ -24,7 +24,6 @@ const videoSchema = new Schema(
         },
         duration: {
             type: Number,// cloudinary url : it send back information get and display
-            required: true,
             default: 0.00,
         },
         views: {
