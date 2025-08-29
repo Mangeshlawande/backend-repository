@@ -2164,3 +2164,7 @@ to channel profile we typed in search url
 ## How to write sub pipelines and routes
 
 ## postman test   
+post : refresh-token 
+post : change-password :: need to send json data
+get : current-user
+patch: /update-account

@@ -3,7 +3,7 @@ import { ApiError } from "../utils/ApiError.js";
 
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { User } from '../models/user.model.js';
-import { uploadOnCloudinary } from "../utils/cloudinary.js"
+import { deleteFromCloudinary, uploadOnCloudinary } from "../utils/cloudinary.js"
 import jwt from 'jsonwebtoken';
 import mongoose from "mongoose";
 
@@ -81,8 +81,8 @@ const registerUser = asyncHandler(async (req, res) => {
         fullname,
         email,
         password,
-        avatar: avatar.url,
-        coverImage: coverImage?.url || "",
+        avatar: avatar.public_id,
+        coverImage: coverImage?.public_id || "",
     });
 
     const createdUser = await User.findById(user._id).select(
@@ -281,7 +281,7 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
      * required user to verify password , get from verifyjwt
      * 
      */
-    const { oldPassword, newPassword } = req.body;
+    const {oldPassword, newPassword} = req.body;
 
     /*  const { oldPassword, newPassword, confPassword } = req.body;
         if(!(newPassword === confPassword)){
@@ -320,7 +320,13 @@ const getCurrentUser = asyncHandler(async (req, res) => {
      */
     return res
         .status(200)
-        .json(200, req.user, "Current user fetched successfully");
+        .json(
+            new ApiResponse(
+                200,
+                req.user,
+                "Current user fetched successfully"
+            )
+        );
 });
 
 const updateAccountDetails = asyncHandler(async (req, res) => {
@@ -358,14 +364,17 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
 const updateUserAvatar = asyncHandler(async (req, res) => {
 
     const avatarLocalPath = req.file?.path;
-    // const user = await User.findById(req.user?._id);
+   
+    
     if (!avatarLocalPath) {
         throw new ApiError(404, "Avatar file is missing !");
     }
     try {
         //TODO :Delete old Image --> Assignment 
-
-        const avatar = await uploadOnCloudinary(avatarLocalPath);
+         const existUser = await User.findById(req.user?._id);
+                let prevAvatar = existUser.avatar
+                const avatar = await uploadOnCloudinary(avatarLocalPath);
+                            await deleteFromCloudinary(prevAvatar);
 
         if (!avatar.url) {
             throw new ApiError(404, "Error while uploading avatar ");
@@ -405,7 +414,11 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
     }
 
     try {
+        // delete prev cover-img 
+        const existUser = await User.findById(req.user._id);
+        const prevCoverImg = existUser.coverImage;
         const coverImage = await uploadOnCloudinary(coverLocalPath);
+        await deleteFromCloudinary(prevCoverImg)
 
         if (!coverImage.url) {
             throw new ApiError(404, "Error while uploading avatar ");
@@ -561,9 +574,9 @@ const getWatchHistory = asyncHandler(async (req, res) => {
                         }
                     },
                     {
-                        $addFields:{
-                            owner:{
-                                $first:"$owner",
+                        $addFields: {
+                            owner: {
+                                $first: "$owner",
                                 // $arrayElemAt: "$owner"
                             }
                         }
@@ -575,12 +588,12 @@ const getWatchHistory = asyncHandler(async (req, res) => {
     ]);
 
     return res.status(200)
-    .json(
-        new ApiResponse(200,
-            user[0].watchHistory, 
-            "Watch History fetched successfully"
+        .json(
+            new ApiResponse(200,
+                user[0].watchHistory,
+                "Watch History fetched successfully"
+            )
         )
-    )
 })
 
 
