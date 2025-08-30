@@ -2168,3 +2168,42 @@ post : refresh-token
 post : change-password :: need to send json data
 get : current-user
 patch: /update-account
+
+
+create controller files
+ touch comment.controller.js dashboard.controller.js healthcheck.controller.js like.controller.js playlist.controller.js subscription.controller.js tweet.controller.js video.controller.js
+
+
+
+
+🔹 What is a REST API?
+
+API = Application Programming Interface → a way for two applications to talk to each other.
+
+REST = Representational State Transfer → a set of rules for designing APIs.
+
+👉 So, a REST API is a way for one software to talk to another over the internet using standard rules.
+
+🔹 Real-life Example
+Think of a restaurant 🍴:
+You (the client) want food.
+The waiter (API) takes your order to the kitchen and brings food back.
+The kitchen (server) prepares the food.
+Here:
+
+Client = Your phone/browser
+Server = The backend (database, logic)
+API = The messenger (waiter)
+
+
+🔹 How REST API works
+REST APIs use HTTP methods (like web browsers).
+GET → fetch data (e.g., get all blog posts)
+POST → send data (e.g., create new blog post)
+PUT/PATCH → update data (e.g., edit blog post)
+DELETE → remove data (e.g., delete blog post)
+
+Data is usually sent/received in JSON format (like a structured text).
+
+
+touch comment.routes.js dashboard.routes.js like.routes.js video.routes.js playlist.routes.js tweet.routes.js healthcheck.routes.js subscription.routes.js

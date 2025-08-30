@@ -81,8 +81,8 @@ const registerUser = asyncHandler(async (req, res) => {
         fullname,
         email,
         password,
-        avatar: avatar.public_id,
-        coverImage: coverImage?.public_id || "",
+        avatar: avatar.url,
+        coverImage: coverImage?.url || "",
     });
 
     const createdUser = await User.findById(user._id).select(
@@ -262,7 +262,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
                     200,
                     {
                         accessToken,
-                        newRefreshToken,
+                        refreshToken: newRefreshToken,
                     },
                     "Access Token refreshed !!"
                 )
@@ -281,7 +281,7 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
      * required user to verify password , get from verifyjwt
      * 
      */
-    const {oldPassword, newPassword} = req.body;
+    const { oldPassword, newPassword } = req.body;
 
     /*  const { oldPassword, newPassword, confPassword } = req.body;
         if(!(newPassword === confPassword)){
@@ -364,17 +364,29 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
 const updateUserAvatar = asyncHandler(async (req, res) => {
 
     const avatarLocalPath = req.file?.path;
-   
-    
+
+
+
     if (!avatarLocalPath) {
         throw new ApiError(404, "Avatar file is missing !");
     }
     try {
         //TODO :Delete old Image --> Assignment 
-         const existUser = await User.findById(req.user?._id);
-                let prevAvatar = existUser.avatar
-                const avatar = await uploadOnCloudinary(avatarLocalPath);
-                            await deleteFromCloudinary(prevAvatar);
+        const existUser = await User.findById(req.user?._id);
+        let prevUrl = existUser.avatar
+
+
+        const avatar = await uploadOnCloudinary(avatarLocalPath);
+
+        // Extract public ID (works for jpg, png, pdf, etc.)
+        const match = prevUrl.match(/upload\/v\d+\/([^\.]+)/);
+
+        if (match) {
+            const publicId = match[1];
+
+            await deleteFromCloudinary(publicId);
+            // console.log("Public ID:", publicId);
+        }
 
         if (!avatar.url) {
             throw new ApiError(404, "Error while uploading avatar ");
@@ -418,7 +430,15 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
         const existUser = await User.findById(req.user._id);
         const prevCoverImg = existUser.coverImage;
         const coverImage = await uploadOnCloudinary(coverLocalPath);
-        await deleteFromCloudinary(prevCoverImg)
+
+        const match = prevCoverImg.match(/upload\/v\d+\/([^\.]+)/);
+
+        if (match) {
+            const publicId = match[1];
+
+            await deleteFromCloudinary(publicId);
+            // console.log("Public ID:", publicId);
+        }
 
         if (!coverImage.url) {
             throw new ApiError(404, "Error while uploading avatar ");
@@ -542,6 +562,9 @@ const getWatchHistory = asyncHandler(async (req, res) => {
 
 
      */
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
 
     const user = await User.aggregate([
         {
@@ -556,6 +579,8 @@ const getWatchHistory = asyncHandler(async (req, res) => {
                 foreignField: "_id",
                 as: "watchHistory",
                 pipeline: [
+                    { $skip: skip },   //  skip first (page-1)*limit videos
+                    { $limit: limit }, //  limit to "limit" videos
                     {
                         $lookup: {
                             from: "users",
@@ -583,14 +608,19 @@ const getWatchHistory = asyncHandler(async (req, res) => {
                     }
                 ]
             }
-        }
-
+        },
     ]);
+
+    if (!user.length) {
+        throw new ApiError(404, "User not found")
+    }
 
     return res.status(200)
         .json(
             new ApiResponse(200,
-                user[0].watchHistory,
+                { history: user[0].watchHistory ,
+                    pagination:{page, limit}
+                },
                 "Watch History fetched successfully"
             )
         )
@@ -609,5 +639,5 @@ export {
     updateUserCoverImage,
     getUserChannelProfile,
     getWatchHistory,
-
 };
+
