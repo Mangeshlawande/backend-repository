@@ -17,7 +17,6 @@ const likeSchema = new Schema(
             ref: "Tweet",
             required: true
         },
-
         likedBy: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
