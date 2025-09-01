@@ -1,8 +1,8 @@
 import { Router } from "express";
-import {verifyJwt} from '../middlewares/auth.middleware.js';
+import { verifyJWT } from '../middlewares/auth.middleware.js';
 import {
-    getVideoComments, 
-    addComment, 
+    getVideoComments,
+    addComment,
     updateComment,
     deleteComment,
 
@@ -14,7 +14,7 @@ import {
 const router = Router();
 
 // apply verifyJWT middleware to all routes 
-router.use(verifyJwt);
+router.use(verifyJWT);
 
 router.route('/:videoId').get(getVideoComments).post(addComment);
 
